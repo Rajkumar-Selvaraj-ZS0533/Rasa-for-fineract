@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  Rasa:
+    image: 2b7e90f527bb4722201ee33424c9fe816341092b8e07fde94afc47be1583acaf
+    ports:
+      - "5005:5005"
+    networks:
+      -  rasa-compose-network
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_PASSWORD: Password@123
+
+    networks:
+      -  rasa-compose-network
+networks:
+  rasa-compose-network:

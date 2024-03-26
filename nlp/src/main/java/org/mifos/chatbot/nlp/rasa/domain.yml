@@ -1,0 +1,120 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - login_credentials
+  - loan_status
+  - disbursement_amount
+  - maturity_date
+  - next_due_date
+  - next_due_principal
+  - approved_principal
+  - interest_rate
+  - previous_payment_date
+  - previous_payment_amount
+  - previous_payment_interest
+  - arrear_day
+  - loan_disbursed_date
+  - loan_approved_date
+  - first_repayment_date
+  - client_activation_date
+  - get_client_count
+
+actions:
+  - action_hello_world
+  - action_extract_credentials
+  - action_loan_status
+
+responses:
+  utter_greet:
+    - text: "Hey! How are you?"
+
+  utter_cheer_up:
+    - text: "Here is something to cheer you up:"
+      image: "https://i.imgur.com/nGF1K8f.jpg"
+
+  utter_did_that_help:
+    - text: "Did that help you?"
+
+  utter_happy:
+    - text: "Great, carry on!"
+
+  utter_goodbye:
+    - text: "Bye"
+
+  utter_iamabot:
+    - text: "I am a bot, powered by Rasa."
+
+  utter_success:
+    - text: "Successfully login"
+
+  utter_loan_status:
+    - text: "Your loan status is ."
+
+  utter_disbursement_amount:
+    - text: "The disbursement amount is "
+
+  utter_maturity_date:
+    - text: "The maturity date is "
+
+  utter_next_due_date:
+    - text: "Your next due date is "
+
+  utter_interest_rate:
+    - text: "The interest rate is "
+
+  utter_previous_payment_date:
+    - text: "The previous payment date is "
+
+  utter_previous_payment_amount:
+    - text: "The previous payment amount is "
+
+  utter_previous_payment_interest:
+    - text: "The previous payment interest is "
+
+  utter_next_due_principal:
+    - text: "The next due amount is "
+
+  utter_arrear_day:
+    - text: "Arrears since  "
+
+  utter_loan_disbursed_date:
+    - text: "Your loan disbursed date is "
+
+  utter_loan_approved_date:
+    - text: "Your loan was approved on "
+
+  utter_first_repayment_date:
+    - text: "Your first repayment date is "
+
+  utter_client_activation_date:
+    - text: "Client activation date is "
+
+  utter_get_clients_count:
+    - text: "The number of clients is X."
+
+  utter_default:
+    - text: "I'm sorry, I didn't understand that. Can you please rephrase?"
+
+slots:
+  username:
+    type: text
+    mappings:
+      - type: custom
+        action: action_extract_credentials
+  password:
+    type: text
+    mappings:
+      - type: custom
+        action: action_extract_credentials
+
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

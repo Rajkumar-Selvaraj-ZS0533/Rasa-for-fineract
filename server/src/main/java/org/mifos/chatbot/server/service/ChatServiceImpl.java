@@ -55,6 +55,9 @@ public class ChatServiceImpl {
         log.info("Response in processUserUtterance"+res);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(res);
+        if(jsonNode.size()==0) {
+            return new ArrayList<>();
+        }
         Tracker tracker = retriveConversationTracker(jsonNode.get(0).get("recipient_id").textValue());
         Intent intent = findIntent(tracker);
         log.info("intent loggin "+ intent.toString());
@@ -116,49 +119,49 @@ public class ChatServiceImpl {
             return loanService.getLoanStatus(botResponse, tracker, request);
         }
         else if(intentName.equals(APPROVED_PRINCIPAL)) {
-            return loanService.getApprovedPrincipalAmount(botResponse).toString();
+            return loanService.getApprovedPrincipalAmount(botResponse,request).toString();
         }
         else if(intentName.equals(INTEREST_RATE)) {
-            return loanService.getInterestRate(botResponse).toString();
+            return loanService.getInterestRate(botResponse,request).toString();
         }
         else if(intentName.equals(MATURITY_DATE)) {
-            return loanService.getMaturityDate(botResponse);
+            return loanService.getMaturityDate(botResponse, request);
         }
         else if(intentName.equals(NEXT_DUE_DATE)) {
-            return loanService.getNextDueDate(botResponse);
+            return loanService.getNextDueDate(botResponse, request);
         }
         else if(intentName.equals(NEXT_DUE_PRINCIPAL)) {
-            return loanService.getNextDuePrincipal(botResponse);
+            return loanService.getNextDuePrincipal(botResponse, request);
         }
         else if(intentName.equals(PREVIOUS_PAYMENT_DATE)) {
-            return loanService.getPreviousPaymentDate(botResponse);
+            return loanService.getPreviousPaymentDate(botResponse, request);
         }
         else if(intentName.equals(PREVIOUS_PAYMENT_AMOUNT)) {
-            return loanService.getPreviousPaymentAmount(botResponse);
+            return loanService.getPreviousPaymentAmount(botResponse, request);
         }
         else if(intentName.equals(PREVIOUS_PAYMENT_INTEREST)) {
-            return loanService.getPreviousPaymentInterest(botResponse);
+            return loanService.getPreviousPaymentInterest(botResponse, request);
         }
         else if(intentName.equals(ARREAR_DAY)) {
-            return loanService.getArrearDays(botResponse);
+            return loanService.getArrearDays(botResponse, request);
         }
         else if (intentName.equals(CLIENT_COUNT)){
-            return loanService.getClientCount(botResponse);
+            return loanService.getClientCount(botResponse,request);
         }
         else if(intentName.equals(LOAN_DISBURSED_DATE)) {
-            return loanService.getLoanDisbursedDate(botResponse);
+            return loanService.getLoanDisbursedDate(botResponse, request);
         }
         else if(intentName.equals(LOAN_APPROVED_DATE)) {
-            return loanService.getLoanApprovedDate(botResponse);
+            return loanService.getLoanApprovedDate(botResponse, request);
         }
         else if(intentName.equals(FIRST_REPAYMENT_DATE)) {
-            return loanService.getFirstRepaymentDate(botResponse);
+            return loanService.getFirstRepaymentDate(botResponse, request);
         }
         else if(intentName.equals(CLIENT_ACTIVATION_DATE)){
-            return loanService.getClientActivationDate(botResponse);
+            return loanService.getClientActivationDate(botResponse, request);
         }
         else if(intentName.equals(DISBURSEMENT_AMOUNT)) {
-            return loanService.getDisbursementAmount(botResponse);
+            return loanService.getDisbursementAmount(botResponse, request);
         }
         else {
             return "Intent not found";

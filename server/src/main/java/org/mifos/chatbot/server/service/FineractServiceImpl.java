@@ -28,9 +28,6 @@ public class FineractServiceImpl {
    @Autowired
    private FineractServiceOpenFeign openFeign;
 
-    String admin_username = "mifos";
-    String admin_password = "Password@123";
-    String basicAuthCredentials="";
     public LoanAccounts getClientDetails(int clientId, HttpServletRequest request) {
         LoanAccounts loanAccounts = new LoanAccounts();
         try {
@@ -56,9 +53,9 @@ public class FineractServiceImpl {
 
         return loanAccounts;
     }
-    public GetLoansResponse getLoanDetails(String response) {
-        String basicAuthCredentials = "Basic " + Base64.getEncoder().encodeToString((admin_username + ":" + admin_password).getBytes());
-        ResponseEntity feignResponse = openFeign.getLoans(1, "all", "guarantors,futureSchedule",
+    public GetLoansResponse getLoanDetails(String response, HttpServletRequest request) {
+         String basicAuthCredentials=request.getHeader("Authorization");
+         ResponseEntity feignResponse = openFeign.getLoans(1, "all", "guarantors,futureSchedule",
                 "default", basicAuthCredentials);
         if(feignResponse.getStatusCode().value() == 200) {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -72,11 +69,12 @@ public class FineractServiceImpl {
         }
         return null;
     }
-    public ClientCountapi getAllClient(){
+    public ClientCountapi getAllClient(HttpServletRequest request) {
         try {
-        DisableCertificateValidation.disable();
-        String basicAuthCredentials = "Basic " + Base64.getEncoder().encodeToString((admin_username + ":" + admin_password).getBytes());
-        log.info(basicAuthCredentials.toString());
+            DisableCertificateValidation.disable();
+
+            String basicAuthCredentials=request.getHeader("Authorization");
+            log.info(basicAuthCredentials.toString());
             String requestBody = "{\"request\": {\"text\": \"\"}, \"page\": 0, \"size\": 50}";
             ResponseEntity feignResponse=openFeign.getClientCount(requestBody,"default",basicAuthCredentials);
         log.info(feignResponse.getBody().toString());
@@ -98,8 +96,8 @@ public class FineractServiceImpl {
 
         return null;
     }
-    public GetClientInfoResponse getClientInfo() {
-        String basicAuthCredentials = "Basic " + Base64.getEncoder().encodeToString((admin_username + ":" + admin_password).getBytes());
+    public GetClientInfoResponse getClientInfo(HttpServletRequest request) {
+        String basicAuthCredentials=request.getHeader("Authorization");
         ResponseEntity feignResponse = openFeign.getClientInfo(1,"gsoc", basicAuthCredentials);
         if(feignResponse.getStatusCode().value() == 200) {
             ObjectMapper objectMapper = new ObjectMapper();

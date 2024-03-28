@@ -25,11 +25,17 @@ intents:
   - first_repayment_date
   - client_activation_date
   - get_client_count
+  - get_client_id
+  - set_client_id
 
 actions:
   - action_hello_world
   - action_extract_credentials
   - action_loan_status
+  - action_get_client_id
+
+entities:
+  - client_id
 
 responses:
   utter_greet:
@@ -99,8 +105,16 @@ responses:
   utter_get_clients_count:
     - text: "The number of clients is X."
 
+  utter_ask_client_id:
+    - text: "What is your client id?"
+
+  utter_loan_status_of_client:
+    - text: "loan status of you client is ."
+
   utter_default:
     - text: "I'm sorry, I didn't understand that. Can you please rephrase?"
+
+
 
 slots:
   username:
@@ -113,6 +127,12 @@ slots:
     mappings:
       - type: custom
         action: action_extract_credentials
+  client_id_slot:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: client_id
 
 
 session_config:

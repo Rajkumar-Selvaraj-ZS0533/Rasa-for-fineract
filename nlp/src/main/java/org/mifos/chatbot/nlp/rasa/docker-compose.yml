@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   Rasa:
-    image: 2b7e90f527bb4722201ee33424c9fe816341092b8e07fde94afc47be1583acaf
+    image: mariappansivakumar/fineract-rasa:0.0.1-SNAPSHOT
     ports:
       - "5005:5005"
     networks:

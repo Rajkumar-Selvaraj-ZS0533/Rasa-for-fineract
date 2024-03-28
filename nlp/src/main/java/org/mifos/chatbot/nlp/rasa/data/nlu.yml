@@ -378,3 +378,22 @@ nlu:
       - how many clients?
       - number of clients
       - clients count
+
+  - intent: set_client_id
+    examples: |
+      - [0001](client_id)
+      - client id is [0001](client_id)
+      - client id :[0001](client_id)
+      - client id: [0001](client_id)
+      - id is [0001](client_id)
+      - id : [0001](client_id)
+      - id: [0001](client_id)
+
+  - intent: loan_status_of_client
+    examples: |
+      - what is the loan status of my client [0001](client_id)
+      - what is the loan status of the client [0020](client_id)
+      - what is the loan status of [0020](client_id)
+      - tell me the loan status of the client [0231](client_id)
+      - tell me the loan status of my client [1243](client_id)
+      - tell me the loan status of [1241](client_id)

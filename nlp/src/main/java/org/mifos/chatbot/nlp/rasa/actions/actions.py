@@ -14,13 +14,17 @@ from rasa_sdk.executor import CollectingDispatcher
 class ActionHelloWorld(Action):
 
     def name(self) -> Text:
-        return "action_hello_world"
+        return "action_get_client_id"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        dispatcher.utter_message(text="Hello Raj & Mari!")
+        clientId= tracker.get_slot("client_id_slot")
+        if not clientId:
+            dispatcher.utter_message(text="Sorry I don't get the client id")
+        else:
+            dispatcher.utter_message(text=f"Your client id is {clientId}")
 
         return []
 

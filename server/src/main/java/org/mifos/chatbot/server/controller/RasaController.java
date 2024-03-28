@@ -36,9 +36,9 @@ public class RasaController {
     ChatServiceImpl chatService;
 
     Helper helper = new Helper();
-    @CrossOrigin(origins = "https://rajkumar-selvaraj-zs0533.github.io/")
+    @CrossOrigin(origins = {"https://rajkumar-selvaraj-zs0533.github.io/", "http://localhost:4200", "http://localhost:4201"})
     @PostMapping("/getUserUtterance")
-    public ResponseEntity<List<Textmodel>> getUserUtterance(@org.springframework.web.bind.annotation.RequestBody String message) throws IOException {
+    public ResponseEntity<List<Textmodel>> getUserUtterance(@org.springframework.web.bind.annotation.RequestBody String message, HttpServletRequest request) throws IOException {
         log.info("request body "+ message);
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -49,7 +49,13 @@ public class RasaController {
         log.info("hello this is the rasa controller class" + response);
 //        log.info("res body of the chatservice" + response.toString());
 //        log.info(response.body().string());
-        return new ResponseEntity<>(chatService.processUserUtterance(response,"default"), HttpStatus.OK);
+        return new ResponseEntity<>(chatService.processUserUtterance(response,"default",request), HttpStatus.OK);
+    }
+
+    @GetMapping("/authShare")
+    public void authShare(HttpServletRequest request){
+        String authHeader = request.getHeader("Authorization");
+        log.info(authHeader);
     }
 
     private String generateConversationId() {

@@ -17,4 +17,5 @@ RUN rasa train
 EXPOSE 5005
 
 # Start the Rasa server
-CMD ["rasa", "run", "-m", "models", "--enable-api", "--cors", "*", "--debug"]
+#CMD ["rasa", "run", "-m", "models", "--enable-api", "--cors", "*", "--debug"]
+CMD ["sh", "/app/script.sh"]

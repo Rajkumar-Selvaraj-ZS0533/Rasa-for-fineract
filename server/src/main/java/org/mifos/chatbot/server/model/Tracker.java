@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /*
     Refer to
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 public class Tracker {
     String conversationId;
-    List<String> slots;
+    Map<String,String> slots;
     LatestMessage latestMessage;
     Long latestEventTime;
     String followupAction;

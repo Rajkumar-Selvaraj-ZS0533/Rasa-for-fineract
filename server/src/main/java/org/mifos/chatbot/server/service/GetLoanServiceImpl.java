@@ -9,6 +9,7 @@ import org.mifos.chatbot.server.model.Tracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -21,8 +22,9 @@ public class GetLoanServiceImpl {
 
     Helper helper = new Helper();
 
-    public String getLoanStatus(String botResponse, Tracker tracker) {
-        LoanAccounts loanAccounts = fineractService.getClientDetails();
+    public String getLoanStatus(String botResponse, Tracker tracker, HttpServletRequest request) {
+        int clientId = Integer.parseInt(this.getSlot("client_id_slot", tracker));
+        LoanAccounts loanAccounts = fineractService.getClientDetails(clientId, request);
         List<LoanAccount> loanAccountList = loanAccounts.getLoanAccounts();
         String res = "You have "+ loanAccountList.size() + " Loan Account";
         for(LoanAccount account : loanAccountList) {
@@ -155,5 +157,10 @@ public class GetLoanServiceImpl {
     }
 
     public void authorization(String text) {
+    }
+
+    private String getSlot(String slotName, Tracker tracker) {
+        return tracker.getSlots().get(slotName);
+
     }
 }

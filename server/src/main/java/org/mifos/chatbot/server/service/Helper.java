@@ -17,7 +17,9 @@ import org.mifos.chatbot.server.model.LatestMessage;
 import org.mifos.chatbot.server.model.Tracker;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 @Slf4j
@@ -46,8 +48,16 @@ public class Helper {
                 key->{
                     if(key.equals("sender_id"))
                         tracker.setConversationId(obj.get("sender_id").toString());
-                    else if(key.equals("slots"))
-                        tracker.setSlots(null);
+                    else if(key.equals("slots")){
+                        Map<String,String > map=new HashMap<>();
+                        JsonObject slotObject=obj.getAsJsonObject("slots");
+                        slotObject.keySet().stream().forEach(k->{
+                            if (!slotObject.get(k).isJsonNull())
+                            map.put(k,slotObject.get(k).getAsString());
+                        });
+                        tracker.setSlots(map);
+                    }
+
                     else if(key.equals("latest_message")) {
                         log.info(obj.get("latest_message").toString());
                         tracker.setLatestMessage(constructLatestMessage(obj.get("latest_message")));

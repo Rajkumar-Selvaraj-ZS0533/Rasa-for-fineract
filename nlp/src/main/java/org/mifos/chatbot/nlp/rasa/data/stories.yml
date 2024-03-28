@@ -15,12 +15,12 @@ stories:
       - intent: get_client_count
       - action: utter_get_clients_count
 
-  - story: get loan status
-    steps:
-      - intent: greet
-      - action: utter_greet
-      - intent: loan_status
-      - action: utter_loan_status
+#  - story: get loan status
+#    steps:
+#      - intent: greet
+#      - action: utter_greet
+#      - intent: loan_status
+#      - action: utter_loan_status
 
   - story: disbursement amount
     steps:
@@ -124,3 +124,12 @@ stories:
       - action: utter_did_that_help
       - intent: deny
       - action: utter_goodbye
+
+  - story: get loan status of client
+    steps:
+      - intent: loan_status_of_client
+        entities:
+          - client_id: 0001
+      - slot_was_set:
+          - client_id_slot: 0002
+      - action: utter_loan_status_of_client

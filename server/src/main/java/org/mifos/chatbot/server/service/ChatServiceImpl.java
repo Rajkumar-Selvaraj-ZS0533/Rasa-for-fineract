@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class ChatServiceImpl {
     @Value("${WEBHOOK}")
     private String WEBHOOK;
     Helper helper=new Helper();
+
+    private static final String LOAN_STATUS_OF_CLIENT="loan_status_of_client";
 
     private static final String LOGIN_CREDENTIALS = "login_credentials";
     private static final String LOAN_STATUS = "loan_status";
@@ -46,16 +49,16 @@ public class ChatServiceImpl {
     @Autowired
     private GetLoanServiceImpl loanService;
 
-    public List<Textmodel> processUserUtterance( Response botResponse, String conversationId) throws IOException {
+    public List<Textmodel> processUserUtterance(Response botResponse, String conversationId, HttpServletRequest request) throws IOException {
         log.info("hello this is from the processuserutterance method"+botResponse);
         String res = botResponse.body().string();
-        log.info(res);
+        log.info("Response in processUserUtterance"+res);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(res);
         Tracker tracker = retriveConversationTracker(jsonNode.get(0).get("recipient_id").textValue());
         Intent intent = findIntent(tracker);
         log.info("intent loggin "+ intent.toString());
-        return classifyIntent(jsonNode, intent, tracker);
+        return classifyIntent(jsonNode, intent, tracker, request);
     }
     public Response getResponse(String message) throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
@@ -71,13 +74,13 @@ public class ChatServiceImpl {
                 .build();
         Response response = client.newCall(request).execute();
         if(response.code() != 200) {
-            //TODO handle exception
+            //TODO: handle exception
         }
         log.info("ahasas" + response.message());
         return response;
     }
 
-    public List<Textmodel> classifyIntent(JsonNode jsonNode, Intent intent, Tracker tracker) throws IOException {
+    public List<Textmodel> classifyIntent(JsonNode jsonNode, Intent intent, Tracker tracker, HttpServletRequest request) throws IOException {
         String botResponse = "";
         List<Textmodel> list= new ArrayList<>();
 //        String res = botResponse1.body().string();
@@ -88,7 +91,7 @@ public class ChatServiceImpl {
 //        log.info(jsonNode.get("text").toString());
         // Extract the recipient_id fi
         String intentName = intent.getName();
-        String text = gettext11(intentName, botResponse, tracker);
+        String text = gettext11(intentName, botResponse, tracker, request);
         if(text.equals("Intent not found")){
             for (int i =0; i<jsonNode.size();i++) {
                 list.add(new Textmodel(jsonNode.get(i).get("recipient_id").textValue(), jsonNode.get(i).get("text").textValue()));
@@ -100,14 +103,17 @@ public class ChatServiceImpl {
             return list;
         }
     }
-    public String gettext11(String intentName, String botResponse, Tracker tracker){
+    public String gettext11(String intentName, String botResponse, Tracker tracker, HttpServletRequest request){
         if(intentName.equals(LOGIN_CREDENTIALS)) {
             loanService.authorization(tracker.getLatestMessage().getText());
         }
         if(intentName.equals(LOAN_STATUS)) {
 //            textmodel.setRecipientId(jsonNode.get("recipient_id").asText());
-            return loanService.getLoanStatus(botResponse, tracker);
+            return loanService.getLoanStatus(botResponse, tracker, request);
 //            return textmodel;
+        }
+        if (intentName.equals(LOAN_STATUS_OF_CLIENT)) {
+            return loanService.getLoanStatus(botResponse, tracker, request);
         }
         else if(intentName.equals(APPROVED_PRINCIPAL)) {
             return loanService.getApprovedPrincipalAmount(botResponse).toString();

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -29,14 +30,15 @@ public class FineractServiceImpl {
 
     String admin_username = "mifos";
     String admin_password = "Password@123";
-
-    public LoanAccounts getClientDetails() {
+    String basicAuthCredentials="";
+    public LoanAccounts getClientDetails(int clientId, HttpServletRequest request) {
         LoanAccounts loanAccounts = new LoanAccounts();
         try {
+            String basicAuthCredentials=request.getHeader("Authorization");
             DisableCertificateValidation.disable();
-            String basicAuthCredentials = "Basic " + Base64.getEncoder().encodeToString((admin_username + ":" + admin_password).getBytes());
+//            String basicAuthCredentials = "Basic " + Base64.getEncoder().encodeToString((admin_username + ":" + admin_password).getBytes());
             log.info(basicAuthCredentials.toString());
-            ResponseEntity feignResponse = openFeign.getClient(3 , "default", basicAuthCredentials);
+            ResponseEntity feignResponse = openFeign.getClient(clientId , "default", basicAuthCredentials); //TODO: change hard coded client to soft code
             if(feignResponse.getStatusCode().value() == 200) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
